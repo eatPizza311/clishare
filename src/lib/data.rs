@@ -1,3 +1,5 @@
+pub mod model;
+
 use std::str::FromStr;
 
 use derive_more::{Display, From};
