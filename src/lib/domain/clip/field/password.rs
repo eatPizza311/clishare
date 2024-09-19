@@ -9,6 +9,7 @@ pub struct Password(Option<String>);
 
 impl Password {
     // Into trait let us be able to accept either an Option or String as password
+    // If passing String, it will be convert into Option<String>
     pub fn new<T: Into<Option<String>>>(password: T) -> Result<Self, ClipError> {
         //TODO: add password length validation
         let password: Option<String> = password.into();
