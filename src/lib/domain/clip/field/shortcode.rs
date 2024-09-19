@@ -3,7 +3,7 @@ use std::str::FromStr;
 use derive_more::From;
 use serde::{Deserialize, Serialize};
 
-use crate::domain::clip::{field::shortcode, ClipError};
+use crate::domain::clip::ClipError;
 
 // derive_more From will automatically implement From trait to convert a String into ShortCode
 #[derive(Debug, Clone, Deserialize, Serialize, From)]
