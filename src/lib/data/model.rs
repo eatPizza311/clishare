@@ -108,7 +108,7 @@ pub struct UpdateClip {
 impl From<crate::service::ask::UpdateClip> for UpdateClip {
     fn from(req: crate::service::ask::UpdateClip) -> Self {
         Self {
-            shortcode: req.shortcode.into_inner(),
+            shortcode: req.shortcode.as_str().to_string(),
             content: req.content.into_inner(),
             title: req.title.into_inner(),
             expires: req.expires.into_inner().map(|time| time.timestamp()),
