@@ -45,6 +45,7 @@ pub struct GetClip {
 }
 
 // Convert ask::GetClip to model::GetClip in order to query the database
+// Service layer -> Data layer
 impl From<crate::service::ask::GetClip> for GetClip {
     fn from(req: crate::service::ask::GetClip) -> Self {
         Self {
@@ -79,6 +80,7 @@ pub struct NewClip {
     pub(in crate::data) password: Option<String>,
 }
 
+// Service layer -> Data layer
 impl From<crate::service::ask::NewClip> for NewClip {
     fn from(req: crate::service::ask::NewClip) -> Self {
         Self {
@@ -100,4 +102,17 @@ pub struct UpdateClip {
     pub(in crate::data) title: Option<String>,
     pub(in crate::data) expires: Option<i64>,
     pub(in crate::data) password: Option<String>,
+}
+
+// Service layer -> Data layer
+impl From<crate::service::ask::UpdateClip> for UpdateClip {
+    fn from(req: crate::service::ask::UpdateClip) -> Self {
+        Self {
+            shortcode: req.shortcode.into_inner(),
+            content: req.content.into_inner(),
+            title: req.title.into_inner(),
+            expires: req.expires.into_inner().map(|time| time.timestamp()),
+            password: req.password.into_inner(),
+        }
+    }
 }

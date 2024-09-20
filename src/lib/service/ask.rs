@@ -42,3 +42,12 @@ pub struct NewClip {
     pub expires: field::Expires,
     pub password: field::Password,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct UpdateClip {
+    pub content: field::Content,
+    pub title: field::Title,
+    pub expires: field::Expires,
+    pub password: field::Password,
+    pub shortcode: field::ShortCode,
+}
