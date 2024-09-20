@@ -1,0 +1,20 @@
+use std::convert::TryInto;
+
+use crate::data::{query, DatabasePool, Transaction};
+use crate::service::ask;
+use crate::{Clip, ServiceError, ShortCode};
+
+pub async fn get_clip(req: ask::GetClip, pool: &DatabasePool) -> Result<Clip, ServiceError> {
+    let user_password = req.password.clone();
+    // convert ask::GetClip -> model::GetClip -> domain::Clip
+    let clip: Clip = query::get_clip(req, pool).await?.try_into()?;
+    if clip.password.has_password() {
+        if clip.password == user_password {
+            Ok(clip)
+        } else {
+            Err(ServiceError::PermissionError("Invalid password".to_owned()))
+        }
+    } else {
+        Ok(clip)
+    }
+}
