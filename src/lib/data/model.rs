@@ -5,6 +5,7 @@ use chrono::{NaiveDateTime, Utc};
 use crate::data::DbId;
 use crate::{ClipError, ShortCode, Time};
 
+/// Clip that directly converted from sqlx::Row
 #[derive(Debug, sqlx::FromRow)]
 pub struct Clip {
     pub(in crate::data) clip_id: String,
@@ -35,4 +36,44 @@ impl TryFrom<Clip> for crate::domain::Clip {
             hits: field::Hits::new(u64::try_from(clip.hits)?),
         })
     }
+}
+
+/// Use shortcode to query a clip
+pub struct GetClip {
+    pub(in crate::data) shortcode: String,
+}
+
+impl From<ShortCode> for GetClip {
+    fn from(shortcode: ShortCode) -> Self {
+        GetClip {
+            shortcode: shortcode.into_inner(),
+        }
+    }
+}
+
+impl From<String> for GetClip {
+    fn from(shortcode: String) -> Self {
+        GetClip { shortcode }
+    }
+}
+
+/// New clip with hits = 0, and other specify by user
+pub struct NewClip {
+    pub(in crate::data) clip_id: String,
+    pub(in crate::data) shortcode: String,
+    pub(in crate::data) content: String,
+    pub(in crate::data) title: Option<String>,
+    // Store the dates in database as number of seconds instead of doing string convertion
+    pub(in crate::data) posted: i64,
+    pub(in crate::data) expires: Option<i64>,
+    pub(in crate::data) password: Option<String>,
+}
+
+/// Update clip without modify the clip_id & posted date
+pub struct UpdateClip {
+    pub(in crate::data) shortcode: String,
+    pub(in crate::data) content: String,
+    pub(in crate::data) title: Option<String>,
+    pub(in crate::data) expires: Option<i64>,
+    pub(in crate::data) password: Option<String>,
 }
