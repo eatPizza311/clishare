@@ -1,5 +1,6 @@
 pub mod ctx;
 pub mod form;
+pub mod http;
 pub mod renderer;
 
 // Derive rocket::Responder let us can return this enum directly from a Rocket route
