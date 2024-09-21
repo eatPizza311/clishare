@@ -1,6 +1,7 @@
 pub mod data;
 pub mod domain;
 pub mod service;
+pub mod web;
 
 // Reexport some frequently used type to crate root
 pub use data::DataError;
