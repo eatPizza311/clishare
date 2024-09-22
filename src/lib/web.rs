@@ -3,6 +3,8 @@ pub mod form;
 pub mod http;
 pub mod renderer;
 
+pub const PASSWORD_COOKIE: &str = "password";
+
 // Derive rocket::Responder let us can return this enum directly from a Rocket route
 #[derive(rocket::Responder)]
 pub enum PageError {
