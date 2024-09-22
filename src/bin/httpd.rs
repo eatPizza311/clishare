@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
 use dotenv::dotenv;
-use structopt::clap::App;
 use structopt::StructOpt;
 
 use clishare::data::AppDatabase;
