@@ -1,6 +1,7 @@
 use std::str::FromStr;
 
 use derive_more::From;
+use rocket::request::FromParam;
 use serde::{Deserialize, Serialize};
 
 use crate::domain::clip::ClipError;
@@ -56,6 +57,15 @@ impl From<ShortCode> for String {
 impl From<&str> for ShortCode {
     fn from(value: &str) -> Self {
         ShortCode(value.to_owned())
+    }
+}
+
+// Turn data in URL into parameter
+impl<'r> FromParam<'r> for ShortCode {
+    type Error = &'r str;
+
+    fn from_param(param: &'r str) -> Result<Self, Self::Error> {
+        Ok(ShortCode::from(param))
     }
 }
 
