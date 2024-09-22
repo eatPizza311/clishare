@@ -2,12 +2,13 @@ use std::str::FromStr;
 
 use derive_more::From;
 use rocket::request::FromParam;
+use rocket::{UriDisplayPath, UriDisplayQuery};
 use serde::{Deserialize, Serialize};
 
 use crate::domain::clip::ClipError;
 
 // derive_more From will automatically implement From trait to convert a String into ShortCode
-#[derive(Debug, Clone, Deserialize, Serialize, From)]
+#[derive(Debug, Clone, Deserialize, Serialize, From, UriDisplayQuery, UriDisplayPath)]
 pub struct ShortCode(String);
 
 impl ShortCode {
