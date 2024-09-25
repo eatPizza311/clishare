@@ -8,7 +8,9 @@ use serde::{Deserialize, Serialize};
 use crate::domain::clip::ClipError;
 
 // derive_more From will automatically implement From trait to convert a String into ShortCode
-#[derive(Debug, Clone, Deserialize, Serialize, From, UriDisplayQuery, UriDisplayPath)]
+#[derive(
+    Debug, Clone, Deserialize, Serialize, From, UriDisplayQuery, UriDisplayPath, Hash, Eq, PartialEq,
+)]
 pub struct ShortCode(String);
 
 impl ShortCode {
