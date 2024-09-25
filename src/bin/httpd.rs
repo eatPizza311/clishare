@@ -4,7 +4,7 @@ use dotenv::dotenv;
 use structopt::StructOpt;
 
 use clishare::data::AppDatabase;
-use clishare::web::renderer::Renderer;
+use clishare::web::{hit_counter::HitCounter, renderer::Renderer};
 
 /// Command line options
 #[derive(Debug, StructOpt)]
@@ -22,18 +22,25 @@ fn main() {
     // Read the command line arguments and create Opt struct
     let opt = Opt::from_args();
 
-    // Since Rocket is async, so we need an executor
+    // Since Rocket is async, so we need an executor (tokio's Runtime is our executor)
     let rt = tokio::runtime::Runtime::new().expect("failed to spawn tokio runtime");
-
+    // Create a handel (access to executor) to runtime so we can pass it around
     let handle = rt.handle().clone();
 
+    let renderer = Renderer::new(opt.template_directory.clone());
+
     // run a future and block a thread until the future complete
+    let database = rt.block_on(async move { AppDatabase::new(&opt.connection_string).await });
+
+    let hit_counter = HitCounter::new(database.get_pool().clone(), handle.clone());
+
+    let config = clishare::RocketConfig {
+        renderer,
+        database,
+        hit_counter,
+    };
+
     rt.block_on(async move {
-        let renderer = Renderer::new(opt.template_directory);
-        let database = AppDatabase::new(&opt.connection_string).await;
-
-        let config = clishare::RocketConfig { renderer, database };
-
         clishare::rocket(config)
             .launch()
             .await
