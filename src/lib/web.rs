@@ -1,3 +1,4 @@
+pub mod api;
 pub mod ctx;
 pub mod form;
 pub mod hit_counter;
@@ -5,6 +6,7 @@ pub mod http;
 pub mod renderer;
 
 pub const PASSWORD_COOKIE: &str = "password";
+pub use hit_counter::HitCounter;
 
 // Derive rocket::Responder let us can return this enum directly from a Rocket route
 #[derive(rocket::Responder)]
