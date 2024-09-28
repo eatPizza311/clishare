@@ -67,7 +67,19 @@ fn new_clip(addr: &str, ask_service: NewClip, api_key: ApiKey) -> Result<Clip, B
     let addr = format!("{}/api/clip", addr);
     let mut request = client.post(addr);
     request = request.header(API_KEY_HEADER, api_key.to_base64());
-    Ok(request.send()?.json()?)
+    Ok(request.json(&ask_service).send()?.json()?)
+}
+
+fn update_clip(
+    addr: &str,
+    ask_service: UpdateClip,
+    api_key: ApiKey,
+) -> Result<Clip, Box<dyn Error>> {
+    let client = reqwest::blocking::Client::builder().build()?;
+    let addr = format!("{}/api/clip/", addr);
+    let mut request = client.post(addr);
+    request = request.header(API_KEY_HEADER, api_key.to_base64());
+    Ok(request.json(&ask_service).send()?.json()?)
 }
 
 fn run(opt: Opt) -> Result<(), Box<dyn Error>> {
