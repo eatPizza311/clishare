@@ -92,7 +92,9 @@ fn run(opt: Opt) -> Result<(), Box<dyn Error>> {
                 password: Password::new(password.unwrap_or_default())?,
                 shortcode,
             };
-            todo!()
+            let clip = get_clip(opt.addr.as_str(), req, opt.api_key)?;
+            println!("{:#?}", clip);
+            Ok(())
         }
 
         Command::New {
@@ -107,7 +109,9 @@ fn run(opt: Opt) -> Result<(), Box<dyn Error>> {
                 expires: expires.unwrap_or_default(),
                 password: password.unwrap_or_default(),
             };
-            todo!()
+            let clip = new_clip(opt.addr.as_str(), req, opt.api_key)?;
+            println!("{:#?}", clip);
+            Ok(())
         }
 
         Command::Update {
@@ -117,7 +121,22 @@ fn run(opt: Opt) -> Result<(), Box<dyn Error>> {
             expires,
             password,
         } => {
-            todo!()
+            let password = password.unwrap_or_default();
+            let service_req = GetClip {
+                password: password.clone(),
+                shortcode: shortcode.clone(),
+            };
+            let original_clip = get_clip(opt.addr.as_str(), service_req, opt.api_key.clone())?;
+            let service_req = UpdateClip {
+                content: Content::new(clip.as_str())?,
+                expires: expires.unwrap_or(original_clip.expires),
+                title: title.unwrap_or(original_clip.title),
+                password,
+                shortcode,
+            };
+            let clip = update_clip(opt.addr.as_str(), service_req, opt.api_key)?;
+            println!("{:#?}", clip);
+            Ok(())
         }
     }
 }
