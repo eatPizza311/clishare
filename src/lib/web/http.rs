@@ -218,3 +218,27 @@ pub mod catcher {
         catchers![default, internal_error, not_found]
     }
 }
+
+#[cfg(test)]
+pub mod test {
+    use rocket::form::FromFormField;
+    use rocket::http::Status;
+
+    use crate::data::AppDatabase;
+    use crate::test::async_runtime;
+    use crate::web::test::{client, init_test_client};
+
+    #[test]
+    fn test_get_home() {
+        let (_, client) = init_test_client();
+        let response = client.get("/").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+    }
+
+    #[test]
+    fn test_error_on_missing_clip() {
+        let (_, client) = init_test_client();
+        let response = client.get("/clip/adf").dispatch();
+        assert_eq!(response.status(), Status::NotFound);
+    }
+}
